@@ -30,12 +30,11 @@ const Navigatecard = () => {
             fetchDetails={true}
             onPress={(data, details = null) => {
               dispatch(
-                setOrigin({
+                setDestination({
                   location: details.geometry.location,
                   description: data.description,
                 })
               );
-              dispatch(setDestination(null));
               navigation.navigate("RideOptionsCard");
             }}
           />
