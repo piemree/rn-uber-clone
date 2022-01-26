@@ -1,19 +1,21 @@
-import { View, Image, Text, SafeAreaView, Button } from "react-native";
+import { View, Image } from "react-native";
 import React from "react";
 import tw from "tailwind-react-native-classnames";
 import NavOptions from "../components/NavOptions";
-import axios from 'axios';
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { GOOGLE_MAPS_APIKEY } from "@env";
+import { setDestination, setOrigin } from "../slices/navSlice";
+import { useDispatch } from "react-redux";
+import SafeAreaView from '../components/SafeAreaView';
+;
+
+
 const HomeScreen = () => {
-    function handlePress(params) {
-        axios.get("https://randomuser.me/api/")
-        .then((result) => {
-            console.log(result.data);
-        }).catch((err) => {
-            
-        });
-    }
+  const dispatch = useDispatch();
+
   return (
     <View style={tw`p-5`}>
+      <SafeAreaView />
       <Image
         style={{
           width: 100,
@@ -22,8 +24,32 @@ const HomeScreen = () => {
         }}
         source={{ uri: "https://links.papareact.com/gzs" }}
       />
-      <NavOptions/>
-     
+      <GooglePlacesAutocomplete
+        placeholder="Where From?"
+        nearbyPlacesAPI="GooglePlacesSearch"
+        enablePoweredByContainer={false}
+        debounce={400}
+        styles={{
+          container: { flex: 0 },
+          zIndex: 100,
+        }}
+        query={{
+          key: GOOGLE_MAPS_APIKEY,
+          language: "en",
+        }}
+        returnKeyType={"search"}
+        fetchDetails={true}
+        onPress={(data, details = null) => {
+          dispatch(
+            setOrigin({
+              location: details.geometry.location,
+              description: data.description,
+            })
+          );
+          dispatch(setDestination(null));
+        }}
+      />
+      <NavOptions />
     </View>
   );
 };

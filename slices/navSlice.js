@@ -8,10 +8,10 @@ export const navSlice = createSlice({
     travelTimeInformation: null,
   },
   reducers: {
-    setOrigin: (state, action) => (state.origin = action.payload),
-    setDestination: (state, action) => (state.destination = action.payload),
+    setOrigin: (state, action) => void(state.origin = action.payload),
+    setDestination: (state, action) => void(state.destination = action.payload),
     setTravelTimeInformation: (state, action) =>
-      (state.travelTimeInformation = action.payload),
+    void(state.travelTimeInformation = action.payload),
   },
 });
 
