@@ -3,21 +3,30 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import Map from "../components/Map";
+import Navigatecard from "../components/NavigateCard";
+import Rideoptionscard from "../components/RideOptionsCard";
 
-
-const Stack=createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const Mapscreen = () => {
-
   return (
     <View>
       <View style={tw`h-1/2`}>
-          <Map/>
+        <Map />
       </View>
       <View style={tw`h-1/2`}>
-          <Stack.Navigator>
-              
-          </Stack.Navigator>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Navigation"
+            component={Navigatecard}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="RideOptionsCard"
+            component={Rideoptionscard}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
       </View>
     </View>
   );
