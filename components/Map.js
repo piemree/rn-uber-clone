@@ -11,22 +11,26 @@ const Map = () => {
 
   useEffect(() => {
     if (!origin || !destination) return;
+    setTimeout(() => {
       mapRef.current.fitToSuppliedMarkers(["origin", "destination"], {
         edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
       });
+    }, 0);
   }, [origin, destination]);
+
+  const initialRegion = {
+    latitude: origin?.location?.lat,
+    longitude: origin?.location?.lng,
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005,
+  };
 
   return (
     <MapView
       ref={mapRef}
       style={{ flex: 1 }}
       mapType="mutedStandard"
-      initialRegion={{
-        latitude: origin?.location?.lat,
-        longitude: origin?.location?.lng,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
-      }}
+      initialRegion={initialRegion}
     >
       {origin && destination && (
         <MapViewDirections
@@ -62,6 +66,5 @@ const Map = () => {
     </MapView>
   );
 };
-
 
 export default Map;
