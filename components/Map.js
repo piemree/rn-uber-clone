@@ -1,10 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
-import { useSelector } from "react-redux";
-import { selectDestination, selectOrigin } from "../slices/navSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectDestination,
+  selectOrigin,
+  setTravelTimeInformation,
+} from "../slices/navSlice";
 import { GOOGLE_MAPS_APIKEY } from "@env";
+import axios from "axios";
 const Map = () => {
+  const dispatch = useDispatch();
   const origin = useSelector(selectOrigin);
   const destination = useSelector(selectDestination);
   const mapRef = useRef(null);
@@ -17,6 +23,22 @@ const Map = () => {
       });
     }, 0);
   }, [origin, destination]);
+
+  useEffect(() => {
+    if (!origin || !destination) return;
+
+    const URL = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin.description}&destinations=${destination.description}&key=${GOOGLE_MAPS_APIKEY}`;
+
+    const getTravelTime = async () => {
+      try {
+        const response = await axios.get(URL);
+        dispatch(setTravelTimeInformation(response.data.rows[0].elements[0]));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getTravelTime();
+  }, [origin, destination, GOOGLE_MAPS_APIKEY]);
 
   const initialRegion = {
     latitude: origin?.location?.lat,
